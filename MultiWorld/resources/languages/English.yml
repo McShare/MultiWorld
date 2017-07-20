@@ -38,5 +38,8 @@ unload-usage: '§cUsage: §7/mw unload <level>'
 unload-levelnotexists: '§cLevel %1 does not exists!'
 unload-unloaded: '§cLevel %1 is unloaded!'
 unload-done: '§aLevel unloaded!'
-
+# Delete Command
+delete-usage: '§cUsage: §7/mw delete <level>'
+delete-levelnotexists: '§cLevel %1 does not exists!'
+delete-done: '§aLevel %1 removed!'
 ...
