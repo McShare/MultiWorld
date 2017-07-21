@@ -42,6 +42,8 @@ _**Ported MultiWorld to PocketMine-MP**_
     - [x] Move commands to src/MultiWorld/Command file
     - [ ] Add commands /mw delete, /mw setlobby, /mw setdefault, /mw setspawn
     - [x] Fix some bugs
+    - [ ] Test it
+    - [ ] Release it
   
 ### Wiki:
 
