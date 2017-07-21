@@ -3,7 +3,6 @@
 _**Ported MultiWorld to PocketMine-MP**_
 
 ### Works on:
-  - PocketMine-MP
   - GenisysPro
   - BlueLight
   - Tesseract
