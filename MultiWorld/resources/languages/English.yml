@@ -42,4 +42,11 @@ unload-done: '§aLevel unloaded!'
 delete-usage: '§cUsage: §7/mw delete <level>'
 delete-levelnotexists: '§cLevel %1 does not exists!'
 delete-done: '§aLevel %1 removed!'
+# Setdefault Command
+setdefault-isdefault: '§cLevel %1 is default level'
+setdefault-done: '§a%1 is now default level'
+# Setlobby Command
+setlobby-done: '§aLobby position updated!'
+# Setspawn Command
+setspawn-done: '§aSpawn position updated!'
 ...

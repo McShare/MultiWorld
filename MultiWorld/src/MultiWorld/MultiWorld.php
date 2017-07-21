@@ -57,13 +57,6 @@ class MultiWorld extends PluginBase {
     public $agenerator;
 
     ##\
-    ### > Tasks
-    ##/
-
-    /** @var  RegisterGeneratorTask */
-    public $registerGeneratorTask;
-
-    ##\
     ### > Commands
     ##/
 
@@ -90,6 +83,11 @@ class MultiWorld extends PluginBase {
 
         // commands
         $this->multiWorldCommand = new MultiWorldCommand($this);
+
+        if($this->getServer()->getName() == "PocketMine-MP") {
+            $this->getLogger()->critical("§cMultiWorld can not run with {$this->getServer()->getName()}!");
+            $this->getServer()->getPluginManager()->disablePlugin($this);
+        }
 
         if(is_file($this->getDataFolder()."/config.yml")) {
             if(strval($this->getConfig()->get("plugin-version")) != "1.3.0") {
@@ -159,6 +157,7 @@ class MultiWorld extends PluginBase {
      * @return bool
      */
     public function onCommand(CommandSender $sender, Command $cmd, $label, array $args) {
+        return $this->multiWorldCommand->onCommand($sender, $cmd, $label, $args);
         /*if(!($sender instanceof Player)) {
             return false;
         }

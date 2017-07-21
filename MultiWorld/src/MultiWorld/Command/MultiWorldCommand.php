@@ -9,6 +9,7 @@ use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
 use pocketmine\Player;
 use pocketmine\Server;
+use pocketmine\utils\Config;
 
 class MultiWorldCommand {
 
@@ -200,7 +201,8 @@ class MultiWorldCommand {
                             return false;
                         }
 
-                        foreach (scandir($levelPath) as $directory)
+                        foreach (scandir($levelPath) as $directory) {
+                            files:
                             if (!is_dir($worldPath . $directory)) {
                                 // scanning for level.dat, ...
                                 if (is_file($worldPath . $directory)) {
@@ -210,25 +212,75 @@ class MultiWorldCommand {
                                     return false;
                                 }
                             }
-                        if (is_dir($worldPath . $directory)) {
-                            // scanning for region
-                            foreach (scandir($worldPath . $directory) as $file) {
-                                rmdir($file);
+                            dirs:
+                            if (is_dir($worldPath . $directory)) {
+                                // scanning for region
+                                foreach (scandir($worldPath . $directory) as $file) {
+                                    rmdir($file);
+                                }
+                            }
+                            else {
+                                goto files;
                             }
                         }
 
+                        if (!(count(scandir($levelPath)) <= 0)) {
+                            $sender->sendMessage("§cLevel can not be deleted bug #2");
+                            return false;
+                        }
 
+                        rmdir($levelPath);
+
+                        $sender->sendMessage(MultiWorld::getPrefix() . str_replace("%1", $args[1], LanguageManager::translateMessage("delete-done")));
+                        return false;
+                    case "setdefault":
+                        $defaultLevel = Server::getInstance()->getDefaultLevel()->getName();
+                        if(isset($args[1])) {
+                            $senderLevel = Server::getInstance()->getLevelByName($args[1])->getName();
+                            if($defaultLevel == $senderLevel) {
+                                $sender->sendMessage(MultiWorld::getPrefix(). str_replace("%1", $args[1], LanguageManager::translateMessage("setdefault-isdefault")));
+                                return false;
+                            }
+                            else {
+                                Server::getInstance()->setDefaultLevel(Server::getInstance()->getLevelByName($senderLevel));
+                                $properties = new Config(ConfigManager::getDataPath()."server.properties", Config::PROPERTIES);
+                                $properties->set("level-name", $senderLevel);
+                                $properties->save();
+                                $sender->sendMessage(MultiWorld::getPrefix().str_replace("%1", $args[1], LanguageManager::translateMessage("setdefault-done")));
+
+                            }
+                        }
+                        else {
+                            $senderLevel = $sender->getLevel()->getName();
+                            if($defaultLevel == $senderLevel) {
+                                $sender->sendMessage(MultiWorld::getPrefix(). str_replace("%1", $args[1], LanguageManager::translateMessage("setdefault-isdefault")));
+                                return false;
+                            }
+                            else {
+                                LanguageManager::translateMessage(str_replace("%1", $senderLevel, LanguageManager::translateMessage("setdefault-done")));
+                                Server::getInstance()->setDefaultLevel(Server::getInstance()->getLevelByName($senderLevel));
+                                $properties = new Config(ConfigManager::getDataPath()."server.properties", Config::PROPERTIES);
+                                $properties->set("level-name", $senderLevel);
+                                $properties->save();
+                            }
+                        }
+                        return false;
+                    case "setlobby":
+                        Server::getInstance()->setDefaultLevel($sender->getLevel());
+                        $sender->getLevel()->setSpawnLocation($sender);
+                        $sender->sendMessage("setlobby-done");
+                        // save to properties
+                        $properties = new Config(ConfigManager::getDataPath()."server.properties", Config::PROPERTIES);
+                        $properties->set("level-name", $sender->getLevel()->getName());
+                        $properties->save();
+                        return false;
+                    case "setspawn":
+                    case "setspawnlocation":
+                    case "setworldspawn":
+                        $sender->getLevel()->setSpawnLocation($sender);
+                        $sender->sendMessage(LanguageManager::translateMessage("setspawn-done"));
+                        return false;
                 }
-
-                if (!(count(scandir($levelPath)) <= 0)) {
-                    $sender->sendMessage("§cLevel can not be deleted bug #2");
-                    return false;
-                }
-
-                rmdir($levelPath);
-
-                $sender->sendMessage(MultiWorld::getPrefix() . str_replace("%1", $args[1], LanguageManager::translateMessage("delete-done")));
-                return false;
             }
         }
         else {
