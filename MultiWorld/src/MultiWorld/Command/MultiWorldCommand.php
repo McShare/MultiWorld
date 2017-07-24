@@ -186,6 +186,7 @@ class MultiWorldCommand {
                         return false;
                     case "delete":
                     case "remove":
+                    case "rm":
                         if (!$sender->hasPermission("mw.cmd.delete")) {
                             $sender->sendMessage(LanguageManager::translateMessage("not-perms"));
                             return false;
@@ -216,19 +217,19 @@ class MultiWorldCommand {
 
                         foreach (scandir($levelPath) as $directory) {
                             files:
-                            if (!is_dir($worldPath . $directory)) {
+                            if (is_file($levelPath . $directory)) {
                                 // scanning for level.dat, ...
-                                if (is_file($worldPath . $directory)) {
-                                    unlink($worldPath . $directory);
+                                if (is_file($levelPath . $directory)) {
+                                    unlink($levelPath . $directory);
                                 } else {
                                     $sender->sendMessage("§cLevel can not be deleted bug #1");
                                     return false;
                                 }
                             }
                             dirs:
-                            if (is_dir($worldPath . $directory)) {
+                            if (is_dir($levelPath . $directory)) {
                                 // scanning for region
-                                foreach (scandir($worldPath . $directory) as $file) {
+                                foreach (scandir($levelPath . $directory) as $file) {
                                     rmdir($file);
                                 }
                             }
