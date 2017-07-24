@@ -216,7 +216,6 @@ class MultiWorldCommand {
                         }
 
                         foreach (scandir($levelPath) as $directory) {
-                            files:
                             if (is_file($levelPath . $directory)) {
                                 // scanning for level.dat, ...
                                 if (is_file($levelPath . $directory)) {
@@ -226,7 +225,6 @@ class MultiWorldCommand {
                                     return false;
                                 }
                             }
-                            dirs:
                             if (is_dir($levelPath . $directory)) {
                                 // scanning for region
                                 foreach (scandir($levelPath . $directory) as $file) {
@@ -234,11 +232,14 @@ class MultiWorldCommand {
                                 }
                             }
                             else {
-                                goto files;
+                                $sender->sendMessage("§cLevel can not be deleted bug #3");
+                                return false;
                             }
                         }
 
-                        if (!(count(scandir($levelPath)) <= 0)) {
+
+
+                        if (!(count(scandir($levelPath)) <= 2)) {
                             $sender->sendMessage("§cLevel can not be deleted bug #2");
                             return false;
                         }
