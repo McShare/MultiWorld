@@ -49,7 +49,7 @@ class MultiWorldCommand {
                             LanguageManager::translateMessage("help-2") . "\n" .
                             LanguageManager::translateMessage("help-3") . "\n" .
                             LanguageManager::translateMessage("help-4") . "\n");
-                        return true;
+                        return false;
                     case "create":
                     case "add":
                     case "generate":
@@ -61,8 +61,21 @@ class MultiWorldCommand {
                             $sender->sendMessage(MultiWorld::getPrefix() . LanguageManager::translateMessage("create-usage"));
                             return false;
                         }
-                        $this->plugin->bgenerator->generateLevel($args[1], $args[2], $args[3]);
-                        $sender->sendMessage(MultiWorld::getPrefix() . str_replace("%1", $args[1], LanguageManager::translateMessage("create.generating")));
+                        if(empty($args[2])) {
+                            if(empty($args[3])) {
+                                $this->plugin->bgenerator->generateLevel($args[1], 1, "default");
+                                $sender->sendMessage(MultiWorld::getPrefix() . str_replace("%1", $args[1], LanguageManager::translateMessage("create.generating")));
+                            }
+                            else {
+                                $this->plugin->bgenerator->generateLevel($args[1], $args[2], "default");
+                                $sender->sendMessage(MultiWorld::getPrefix() . str_replace("%1", $args[1], LanguageManager::translateMessage("create.generating")));
+
+                            }
+                        }
+                        else {
+                            $this->plugin->bgenerator->generateLevel($args[1], $args[2], $args[3]);
+                            $sender->sendMessage(MultiWorld::getPrefix() . str_replace("%1", $args[1], LanguageManager::translateMessage("create.generating")));
+                        }
                         return false;
                     case "teleport":
                     case "tp":

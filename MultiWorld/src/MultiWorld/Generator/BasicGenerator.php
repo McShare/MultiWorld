@@ -3,7 +3,12 @@
 namespace MultiWorld\Generator;
 
 use MultiWorld\MultiWorld;
+use pocketmine\level\generator\Flat;
 use pocketmine\level\generator\Generator;
+use pocketmine\level\generator\nether\Nether;
+use pocketmine\level\generator\normal\Normal;
+use pocketmine\level\generator\normal\Normal2;
+use pocketmine\level\generator\Void;
 use pocketmine\Server;
 
 class BasicGenerator {
@@ -41,9 +46,9 @@ class BasicGenerator {
 
     /**
      * @param string $generatorName
-     * @return Generator $generator
+     * @return string
      */
-    public function getBasicGeneratorByName($generatorName) {
+    public function getBasicGeneratorByName(string $generatorName):string {
         switch (strtolower($generatorName)) {
             case "normal":
             case "default":
@@ -51,45 +56,31 @@ class BasicGenerator {
             case "world":
             case self::NORMAL:
                 if(MultiWorld::getInstance()->getServer()->getName()=="PocketMine-MP") {
-                    $generator = Generator::getGenerator("normal");
-                    return $generator;
+                    return Normal::class;
                 }
                 else {
-                    $generator = Generator::getGenerator("normal");
-                    return $generator;
+                    return Normal2::class;
                 }
                 break;
             case "flat":
             case "superflat":
             case self::FLAT:
-                if(MultiWorld::getInstance()->getServer()->getName()=="PocketMine-MP") {
-                    $generator = Generator::getGenerator("flat");
-                    return $generator;
-                }
-                else {
-                    $generator = Generator::getGenerator("flat");
-                    return $generator;
-                }
+                return Flat::class;
                 break;
             case "nether":
             case "hell":
             case self::NETHER:
-                if(MultiWorld::getInstance()->getServer()->getName()=="PocketMine-MP") {
-                    $generator = Generator::getGenerator("hell");
-                    return $generator;
-                }
+                return Nether::class;
                 break;
             case self::VOID:
             case "void":
                 // will be added
                 if(MultiWorld::getInstance()->getServer()->getName()=="PocketMine-MP") {
                     MultiWorld::getInstance()->getLogger()->critical("§4Void generator not found!");
-                    $generator = Generator::getGenerator("flat");
-                    return $generator;
+                    return Normal::class;
                 }
                 else {
-                    $generator = Generator::getGenerator("void");
-                    return $generator;
+                    return Void::class;
                 }
         }
     }
